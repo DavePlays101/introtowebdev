@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>LoRaWAN Data Forwarding</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Page header with navigation -->
+  <header id="site-header">
+    <h1>LoRaWAN + Arduino</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="topic1.html">LoRaWAN Projects</a></li>
+        <li><a href="topic2.html">Server Cluster</a></li>
+        <li><a href="resources.html">Resources</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main content area -->
+  <main>
+    <article>
+      <h2>Data Forwarding with Two Arduinos</h2>
+      <p>
+        In this project, one Arduino receives LoRaWAN sensor packets and immediately
+        forwards the parsed data to a second Arduino via I<sup>2</sup>C for cloud
+        transmission.
+      </p>
+
+      <!-- Section demonstrating image usage -->
+      <section class="highlight">
+        <h3>Key Diagrams</h3>
+        <img src="IMG_2254.JPG" alt="Key diagram 1">
+        <img src="IMG_2252.JPG" alt="Key diagram 2">
+      </section>
+
+      <h3>Hardware & Setup</h3>
+      <ul>
+        <li>RAK LoRa Hat + Arduino Uno</li>
+        <li>Secondary Arduino Uno for Ethernet output</li>
+        <li>Logic-level I<sup>2</sup>C connection (5V → 3.3V safe lines)</li>
+      </ul>
+
+      <h3>Key Code Snippet</h3>
+      <pre><code>
+// On the receiver Arduino:
+void onReceive(int packetSize) {
+  String payload = LoRa.readString();
+  Wire.beginTransmission(0x42); // second Arduino address
+  Wire.write(payload.c_str());
+  Wire.endTransmission();
+}
+      </code></pre>
+
+      <!-- Table demonstration -->
+      <section>
+        <h3>Sample Sensor Data</h3>
+        <table>
+          <thead>
+            <tr><th>Time</th><th>Temp (°C)</th><th>Humidity (%)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>12:00</td><td>22.4</td><td>48</td></tr>
+            <tr><td>12:05</td><td>22.6</td><td>47</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <h3>Outcome</h3>
+      <p>
+        Added a single line (<code>Wire.beginTransmission(0x42);</code>) and the
+        I<sup>2</sup>C handshake resolved. The second Arduino now reliably pushes data
+        to the cloud within seconds of reception.
+      </p>
+    </article>
+  </main>
+
+  <!-- Site footer with class project note -->
+  <footer>
+    <p>This is a class project for <a href="https://ksuweb.github.io/IT3203/">IT 3203</a>.</p>
+    <p>&copy; 2025 David Tarver</p>
+  </footer>
+</body>
+</html>
